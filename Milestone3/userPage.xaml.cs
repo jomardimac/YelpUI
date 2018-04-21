@@ -95,6 +95,39 @@ namespace Milestone3 {
             //SELECT DBUSER.NAME, DBUSER.AVGSTARS, DBUSER.YELPING_SINCE FROM DBUSER WHERE DBUSER.UID IN(SELECT FRIENDS.FID FROM FRIENDS WHERE UID = 'a-PyYzTVrisNpDQ0bwbyvA');
         }
 
+        void populateFriendsReviews() {
+            using (var conn = new NpgsqlConnection(buildConnString())) {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand()) {
+                    cmd.Connection = conn;
+                    if (possibleUIDS.SelectedValue != null) {
+                        cmd.CommandText = "SELECT U.NAME, B.BNAME, R.NOTES, R.STARS, R.FUNNY, R.COOL, R.USEFUL FROM REVIEW AS R INNER JOIN BUSINESS AS B ON B.BID = R.BID INNER JOIN DBUSER AS U on U.UID = R.UID WHERE U.UID IN(SELECT FRIENDS.FID FROM FRIENDS WHERE FRIENDS.UID = '" + possibleUIDS.SelectedValue.ToString() + "')";
+
+
+                        using (var reader = cmd.ExecuteReader()) {
+                            while (reader.Read()) {
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void addFriendsReviewsCols() {
+            DataGridTextColumn nameCol = new DataGridTextColumn();
+            nameCol.Header = "Name";
+            nameCol.Binding = new Binding("friendName");
+            friendsReviews.Columns.Add(nameCol);
+
+            DataGridTextColumn bnameCol = new DataGridTextColumn();
+            bnameCol.Header = "Business Name";
+            bnameCol.Binding = new Binding("businessName");
+            friendsReviews.Columns.Add(bnameCol);
+
+
+        }
+
         void addFriendsListCols() {
             DataGridTextColumn nameCol = new DataGridTextColumn();
             nameCol.Header = "Name";
