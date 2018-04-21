@@ -22,6 +22,7 @@ namespace Milestone3 {
         public userPage() {
             InitializeComponent();
             addFriendsListCols();
+            addFriendsReviewsCols();
         }
 
         private string buildConnString() {
@@ -49,8 +50,11 @@ namespace Milestone3 {
 
         private void uidChosen(object sender, SelectionChangedEventArgs e) {
             friendsList.Items.Clear();
+            friendsReviews.Items.Clear();
+
             populateUserInfo();
             populateFriendsList();
+            populateFriendsReviews();
         }
 
         void populateUserInfo() {
@@ -76,6 +80,7 @@ namespace Milestone3 {
             }
         }
 
+        //Populate the friendsLIst datagrid with information about the friends of the current selected user.
         void populateFriendsList() {
             using (var conn = new NpgsqlConnection(buildConnString())) {
                 conn.Open();
@@ -91,22 +96,19 @@ namespace Milestone3 {
                     }
                 }
             }
-
-            //SELECT DBUSER.NAME, DBUSER.AVGSTARS, DBUSER.YELPING_SINCE FROM DBUSER WHERE DBUSER.UID IN(SELECT FRIENDS.FID FROM FRIENDS WHERE UID = 'a-PyYzTVrisNpDQ0bwbyvA');
         }
 
+        //Populate the friendsReviews datagrid with reviews written by the selected users friends.
         void populateFriendsReviews() {
             using (var conn = new NpgsqlConnection(buildConnString())) {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (possibleUIDS.SelectedValue != null) {
-                        cmd.CommandText = "SELECT U.NAME, B.BNAME, R.NOTES, R.STARS, R.FUNNY, R.COOL, R.USEFUL FROM REVIEW AS R INNER JOIN BUSINESS AS B ON B.BID = R.BID INNER JOIN DBUSER AS U on U.UID = R.UID WHERE U.UID IN(SELECT FRIENDS.FID FROM FRIENDS WHERE FRIENDS.UID = '" + possibleUIDS.SelectedValue.ToString() + "')";
-
-
+                        cmd.CommandText = "SELECT U.NAME, B.BNAME, B.CITY, R.NOTES, R.STARS, R.FUNNY, R.COOL, R.USEFUL FROM REVIEW AS R INNER JOIN BUSINESS AS B ON B.BID = R.BID INNER JOIN DBUSER AS U on U.UID = R.UID WHERE U.UID IN(SELECT FRIENDS.FID FROM FRIENDS WHERE FRIENDS.UID = '" + possibleUIDS.SelectedValue.ToString() + "')";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
-                                
+                                friendsReviews.Items.Add(new Review() { friendName = reader.GetString(0), businessName = reader.GetString(1), businessCity = reader.GetString(2), reviewText = reader.GetString(3), reviewStars = reader.GetInt32(4), reviewFunny = reader.GetInt32(5), reviewCool = reader.GetInt32(6), reviewUseful = reader.GetInt32(7) });
                             }
                         }
                     }
@@ -114,6 +116,7 @@ namespace Milestone3 {
             }
         }
 
+        //Add the needed columsn in the friends' reviews datagrid view.
         void addFriendsReviewsCols() {
             DataGridTextColumn nameCol = new DataGridTextColumn();
             nameCol.Header = "Name";
@@ -125,9 +128,39 @@ namespace Milestone3 {
             bnameCol.Binding = new Binding("businessName");
             friendsReviews.Columns.Add(bnameCol);
 
+            DataGridTextColumn cityCol = new DataGridTextColumn();
+            cityCol.Header = "City";
+            cityCol.Binding = new Binding("businessCity");
+            friendsReviews.Columns.Add(cityCol);
+
+            DataGridTextColumn notesCol = new DataGridTextColumn();
+            notesCol.Header = "Notes";
+            notesCol.Binding = new Binding("reviewText");
+            friendsReviews.Columns.Add(notesCol);
+
+            DataGridTextColumn starsCol = new DataGridTextColumn();
+            starsCol.Header = "Stars";
+            starsCol.Binding = new Binding("reviewStars");
+            friendsReviews.Columns.Add(starsCol);
+
+            DataGridTextColumn funnyCol = new DataGridTextColumn();
+            funnyCol.Header = "Funny";
+            funnyCol.Binding = new Binding("reviewFunny");
+            friendsReviews.Columns.Add(funnyCol);
+
+            DataGridTextColumn coolCol = new DataGridTextColumn();
+            coolCol.Header = "Cool";
+            coolCol.Binding = new Binding("reviewCool");
+            friendsReviews.Columns.Add(coolCol);
+
+            DataGridTextColumn usefulCol = new DataGridTextColumn();
+            usefulCol.Header = "Useful";
+            usefulCol.Binding = new Binding("reviewUseful");
+            friendsReviews.Columns.Add(usefulCol);
 
         }
 
+        //Add the columns needed in the friendsList datagrid view.
         void addFriendsListCols() {
             DataGridTextColumn nameCol = new DataGridTextColumn();
             nameCol.Header = "Name";
