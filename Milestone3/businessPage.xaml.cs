@@ -28,7 +28,8 @@ namespace Milestone3 {
         }
 
         private string buildConnString() {
-            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";
+            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
         }
 
         //Populate states:
@@ -129,6 +130,7 @@ namespace Milestone3 {
         /***************************************************SEARCH RESULT METHODS***************************************************/
         //Populate the populate teh whole search.
         void PopulateSearchResults() {
+            searchResGrid.Items.Clear();
             using (var conn = new NpgsqlConnection(buildConnString())) {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand()) {
