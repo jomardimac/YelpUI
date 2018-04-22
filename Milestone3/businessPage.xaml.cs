@@ -37,7 +37,7 @@ namespace Milestone3 {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
-                    cmd.CommandText = "SELECT distinct state FROM business";
+                    cmd.CommandText = "SELECT distinct state FROM business ORDER BY state;";
                     using (var reader = cmd.ExecuteReader()) {
                         while (reader.Read()) {
                             stateBox.Items.Add(reader.GetString(0));
@@ -58,7 +58,7 @@ namespace Milestone3 {
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (stateBox.SelectedValue != null) {
-                        cmd.CommandText = "SELECT distinct city FROM business WHERE state = '" + stateBox.SelectedValue.ToString() + "'";
+                        cmd.CommandText = "SELECT distinct city FROM business WHERE state = '" + stateBox.SelectedValue.ToString() + "' ORDER BY city";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 cityBox.Items.Add(reader.GetString(0));
@@ -76,7 +76,7 @@ namespace Milestone3 {
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (cityBox.SelectedValue != null) {
-                        cmd.CommandText = "SELECT distinct postalcode FROM business WHERE city = '" + cityBox.SelectedValue.ToString() + "'";
+                        cmd.CommandText = "SELECT distinct postalcode FROM business WHERE city = '" + cityBox.SelectedValue.ToString() + "' ORDER BY postalcode;";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 zipBox.Items.Add(reader.GetString(0));
@@ -111,6 +111,14 @@ namespace Milestone3 {
             }
         }
 
+        private List<String> catList() {
+           List<String> catlist = new List<string>();
+            foreach (var item in listOfBusCat.Items) {
+                catList().Add(item.ToString());
+            }
+            return catlist;
+        }
+
         //Remove Categories from the textbox:
         private void Remove_Click(object sender, RoutedEventArgs e) {
             if (listOfBusCat.SelectedValue != null) {
@@ -120,19 +128,20 @@ namespace Milestone3 {
 
         /***************************************************SEARCH RESULT METHODS***************************************************/
         //Populate the populate teh whole search.
-        void populateSearchResults() {
+        void PopulateSearchResults() {
             using (var conn = new NpgsqlConnection(buildConnString())) {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (cityBox.SelectedValue != null) {
-                        cmd.CommandText = @"SELECT b.bname, b.address, b.city, b.state, b.stars 
-                                            FROM business as b, businesscat as bc
-                                            WHERE b.postalcode = '85226' AND b.bid = bc.bid AND bc.catname = 'American Traditional'
-                                            ORDER BY b.bname;";
+                        String query = @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars FROM business as b, businesscat as bc    WHERE b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#' ORDER BY b.bname;";
+                        query = query.Replace("#state#", stateBox.SelectedValue.ToString());
+                        query = query.Replace("#city#", cityBox.SelectedValue.ToString());
+                        query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
+                        cmd.CommandText = query;
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
-                                searchResGrid.Items.Add(new Review() { friendName = reader.GetString(0), businessName = reader.GetString(1), businessCity = reader.GetString(2), reviewText = reader.GetString(3), reviewStars = reader.GetInt32(4), reviewFunny = reader.GetInt32(5), reviewCool = reader.GetInt32(6), reviewUseful = reader.GetInt32(7) });
+                                searchResGrid.Items.Add(new SearchRes(){Address =  reader.GetString(1), busName = reader.GetString(0), City = reader.GetString(2), State = reader.GetString(3)});
                             }
                         }
                     }
@@ -195,13 +204,10 @@ namespace Milestone3 {
             searchResGrid.Columns.Add(totalCheckinCol);
         }
 
-        
-
-        
-
         private void Search_Businesses_Click(object sender, RoutedEventArgs e) {
-
+            PopulateSearchResults();
         }
+        
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e) {
 

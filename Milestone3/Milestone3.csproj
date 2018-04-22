@@ -77,6 +77,7 @@
     </Compile>
     <Compile Include="Friend.cs" />
     <Compile Include="Review.cs" />
+    <Compile Include="SearchRes.cs" />
     <Compile Include="userPage.xaml.cs">
       <DependentUpon>userPage.xaml</DependentUpon>
     </Compile>
