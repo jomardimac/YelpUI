@@ -112,11 +112,11 @@ namespace Milestone3 {
         }
 
         private List<String> catList() {
-           List<String> catlist = new List<string>();
+            List<String> str = new List<string>();
             foreach (var item in listOfBusCat.Items) {
-                catList().Add(item.ToString());
+               str.Add(item.ToString());
             }
-            return catlist;
+            return str;
         }
 
         //Remove Categories from the textbox:
@@ -134,7 +134,13 @@ namespace Milestone3 {
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (cityBox.SelectedValue != null) {
-                        String query = @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars FROM business as b, businesscat as bc    WHERE b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#' ORDER BY b.bname;";
+                        String query =
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars FROM business as b, businesscat as bc    WHERE b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
+                        foreach (var items in catList()) {
+                            query += " AND bc.catname = '" + items.ToString() + "' ";
+                        }
+
+                        query += "ORDER BY bname";
                         query = query.Replace("#state#", stateBox.SelectedValue.ToString());
                         query = query.Replace("#city#", cityBox.SelectedValue.ToString());
                         query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
