@@ -13,7 +13,7 @@
         <GroupBox Header="Business Category" HorizontalAlignment="Left" Height="341" VerticalAlignment="Top" Width="151" Margin="0,267,0,0"/>
         <GroupBox Header="Open Business" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="500" Margin="156,0,0,0"/>
         <GroupBox Header="SEARCH RESULTS" HorizontalAlignment="Left" Height="370" VerticalAlignment="Top" Width="500" Margin="156,93,0,0">
-            <DataGrid HorizontalAlignment="Left" Width="490" Margin="0,0,-2,0" Height="338" VerticalAlignment="Bottom"/>
+            <DataGrid x:Name="searchResGrid" HorizontalAlignment="Left" Width="490" Margin="0,0,-2,0" Height="338" VerticalAlignment="Bottom"/>
         </GroupBox>
         <GroupBox Header="Selected Business" HorizontalAlignment="Left" Height="124" VerticalAlignment="Top" Width="500" Margin="156,469,0,0"/>
         <GroupBox Header="Filter by Price:" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="280" Margin="661,0,0,0"/>
@@ -22,14 +22,14 @@
         <GroupBox Header="Sort Resuls By:" HorizontalAlignment="Left" Height="165" VerticalAlignment="Top" Width="280" Margin="661,428,0,0"/>
         <Label Content="State:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="39"/>
         <ComboBox x:Name="stateBox" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="stateBox_SelectionChanged"/>
-        <ListBox x:Name="cityBox" Height="80" Margin="11,93,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="129"/>
+        <ListBox x:Name="cityBox" Height="80" Margin="11,93,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="129" SelectionChanged="cityBox_SelectionChanged"/>
         <Label Content="City:" HorizontalAlignment="Left" Margin="11,63,0,0" VerticalAlignment="Top" Height="25" Width="119"/>
         <Label Content="Zipcode:" HorizontalAlignment="Left" Margin="11,173,0,0" VerticalAlignment="Top" Width="119" Height="24"/>
         <ListBox x:Name="zipBox" Height="60" VerticalAlignment="Top" Margin="11,202,0,0" HorizontalAlignment="Left" Width="119"/>
         <ListBox x:Name="buscatBox" Height="170" VerticalAlignment="Top" Margin="10,293,0,0" HorizontalAlignment="Left" Width="130"/>
         <Button Content="Add" HorizontalAlignment="Left" Margin="10,468,0,0" VerticalAlignment="Top" Width="60" Click="Add_Click"/>
         <Button Content="Remove" HorizontalAlignment="Left" Margin="75,468,0,0" VerticalAlignment="Top" Width="65" Click="Remove_Click"/>
-        <TextBox HorizontalAlignment="Left" Height="75" Margin="10,493,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="130"/>
+        <ListBox x:Name="listOfBusCat" HorizontalAlignment="Left" Height="75" Margin="10,493,0,0" VerticalAlignment="Top" Width="130"/>
         <Button Content="Search Businesses" HorizontalAlignment="Left" Margin="10,573,0,0" VerticalAlignment="Top" Width="130" Click="Search_Businesses_Click"/>
         <Label Content="Day of Week:" HorizontalAlignment="Left" Margin="167,18,0,0" VerticalAlignment="Top" Width="80"/>
         <ComboBox x:Name="day_weekBox" HorizontalAlignment="Left" Margin="252,22,0,0" VerticalAlignment="Top" Width="120"/>
