@@ -29,10 +29,19 @@ namespace Milestone3 {
             InitializeComponent();
             PopulateStates();
             PopulateCat();
+            populateStars();
             SearchResultsCols();
 
             currUser = newUser;
             
+        }
+
+        private void populateStars() {
+            selectedRatingDropBox.Items.Add(1);
+            selectedRatingDropBox.Items.Add(2);
+            selectedRatingDropBox.Items.Add(3);
+            selectedRatingDropBox.Items.Add(4);
+            selectedRatingDropBox.Items.Add(5);
         }
 
         private string buildConnString() {
@@ -462,14 +471,9 @@ namespace Milestone3 {
             } else {
                 TimeSpan startMorning = new TimeSpan(6,0,0);
                 TimeSpan endMorning = new TimeSpan(12,0,0);
-
                 TimeSpan endAfteroon = new TimeSpan(17,0,0);
-
                 TimeSpan endEvening = new TimeSpan(23, 0, 0);
-
                 TimeSpan now = DateTime.Now.TimeOfDay;
-
-                businessNameLabel.Text = DateTime.Now.DayOfWeek.ToString();
 
                 using (var conn = new NpgsqlConnection(buildConnString())) {
                     conn.Open();
@@ -484,7 +488,7 @@ namespace Milestone3 {
                                 cmd2.Connection = conn2;
 
                                 //No tuple found for specified day. Need to insert a new tuple for it.
-                                cmd2.CommandText = "INSERT INTO checkin (BID, CI_DayOfWeek, morning, afternoon, evening, night) VALUES ('" + selectedBusiness.BID + "','" + DateTime.Now.DayOfWeek + "',0,1,0,0";                //Insert a new tuple for selected business with current day and 1 afternoon checkin.
+                                cmd2.CommandText = "INSERT INTO checkin (BID, CI_DayOfWeek, morning, afternoon, evening, night) VALUES ('" + selectedBusiness.BID + "','" + DateTime.Now.DayOfWeek + "',0,1,0,0)";                //Insert a new tuple for selected business with current day and 1 afternoon checkin.
                                 cmd2.ExecuteReader();    
                             } else {
                                 //Tuple already exists. Just update and increment whatever value is needed.
@@ -500,6 +504,43 @@ namespace Milestone3 {
 
                         PopulateSearchResults();
                     }
+                }
+            }
+        }
+
+        private static Random random = new Random();
+        public static string RandomString(int length) {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private void addReviewClicked(object sender, RoutedEventArgs e) {
+            bool validID = false;
+            string possibleID;
+            using (var conn = new NpgsqlConnection(buildConnString())) {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand()) {
+                    cmd.Connection = conn;
+                    
+                    while (!validID) {
+                        possibleID = RandomString(30);
+                        var conn2 = new NpgsqlConnection(buildConnString());
+                        conn2.Open();
+                        var cmd2 = new NpgsqlCommand();
+                        cmd2.Connection = conn2;
+                        cmd2.CommandText = "SELECT * FROM REVIEW WHERE REVIEWID = '" + possibleID + "'";
+                        using (var reader = cmd2.ExecuteReader()) {
+                            if (!reader.HasRows) {
+                                validID = true;
+                            } 
+                        }
+                    }
+
+                    string reviewID = RandomString(30);
+                    cmd.CommandText = "INSERT INTO REVIEW(REVIEWID, UID, BID, STARS, REVIEWDATE, NOTES, USEFUL, FUNNY, COOL) VALUES('" + reviewID + "','" + currUser.uid + "','" + selectedBusiness.BID + "'," + selectedRatingDropBox.SelectedValue.ToString() + ",'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + reviewNotesBox.Text + "',0,0,0)";
+                    cmd.ExecuteReader();
+                    PopulateSearchResults();
                 }
             }
         }

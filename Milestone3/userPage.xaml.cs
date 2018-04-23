@@ -41,7 +41,7 @@ namespace Milestone3 {
                     conn.Open();
                     using (var cmd = new NpgsqlCommand()) {
                         cmd.Connection = conn;
-                        cmd.CommandText = "SELECT dbuser.uid FROM dbuser WHERE dbuser.name = '" + nameBox.Text + "'";
+                        cmd.CommandText = "SELECT dbuser.uid FROM dbuser WHERE dbuser.name = '" + nameBox.Text + "' order by dbuser.uid";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 possibleUIDS.Items.Add(reader.GetString(0));
@@ -226,8 +226,12 @@ namespace Milestone3 {
                 MessageBox.Show("No User Selected");
             } else {
                 if (latBox.Text != null && longBox.Text != null) {
-                    currUser.lat = Convert.ToDouble(latBox.Text);
-                    currUser.longi = Convert.ToDouble(longBox.Text);
+                    try {
+                        currUser.lat = Convert.ToDouble(latBox.Text);
+                        currUser.longi = Convert.ToDouble(longBox.Text);
+                    } catch {
+
+                    }
                 }
 
             }
