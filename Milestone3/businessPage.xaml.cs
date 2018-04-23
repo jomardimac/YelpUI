@@ -28,8 +28,8 @@ namespace Milestone3 {
         }
 
         private string buildConnString() {
-            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
-            //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
+            //return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
         }
 
         //Populate states:
@@ -137,7 +137,9 @@ namespace Milestone3 {
                     cmd.Connection = conn;
                     if (cityBox.SelectedValue != null) {
                         String query =
-                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars FROM business as b, businesscat as bc    WHERE b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins 
+                            FROM business as b, businesscat as bc    
+                            WHERE b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
                         foreach (var items in catList()) {
                             query += " AND bc.catname = '" + items.ToString() + "' ";
                         }
@@ -149,7 +151,7 @@ namespace Milestone3 {
                         cmd.CommandText = query;
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
-                                searchResGrid.Items.Add(new SearchRes(){Address =  reader.GetString(1), busName = reader.GetString(0), City = reader.GetString(2), State = reader.GetString(3)});
+                                searchResGrid.Items.Add(new SearchRes(){Address =  reader.GetString(1), busName = reader.GetString(0), City = reader.GetString(2), State = reader.GetString(3), Stars = reader.GetDouble(4), NumRev = reader.GetInt32(5), AvgRev = reader.GetDouble(6), TotalCheckin = reader.GetInt32(7)});
                             }
                         }
                     }

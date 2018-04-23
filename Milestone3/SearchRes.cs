@@ -10,10 +10,10 @@ namespace Milestone3 {
         public string Address { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public float Distance { get; set; }
-        public float Stars { get; set; }
-        public float NumRev { get; set; }
-        public float AvgRev { get; set; }
+        public double Distance { get; set; }
+        public double Stars { get; set; }
+        public int NumRev { get; set; }
+        public double AvgRev { get; set; }
         public int TotalCheckin { get; set; }
     }
 }
