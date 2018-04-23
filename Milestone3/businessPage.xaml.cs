@@ -137,33 +137,87 @@ namespace Milestone3 {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
-                    if (cityBox.SelectedValue != null) {
+
+                    //Normal location filtering:
+                    if (stateBox.SelectedValue != null) {
                         String query =
                             @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
 
                         int n = 0;
                         foreach (var items in CatList()) {
-                            query += @" JOIN (SELECT distinct business.bid FROM business, businesscat WHERE business.bid = businesscat.bid AND state = '#state#' AND city = '#city#' AND postalcode = '#zip#' AND catname = '#items#') t#n# ON t#n#.bid = b.bid";
+                            query +=
+                                @" JOIN (SELECT distinct business.bid FROM business, businesscat WHERE business.bid = businesscat.bid AND state = '#state#' AND city = '#city#' AND postalcode = '#zip#' AND catname = '#items#') t#n# ON t#n#.bid = b.bid";
                             query = query.Replace("#n#", n.ToString());
                             query = query.Replace("#items#", items);
                             n++;
                         }
+
                         
-                        query += " ORDER BY bname";
                         query = query.Replace("#state#", stateBox.SelectedValue.ToString());
                         query = query.Replace("#city#", cityBox.SelectedValue.ToString());
                         query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
+                        
+
+
+                        //Filtering by price:
+                        query += PriceFiltering();
+
+                        query += " ORDER BY bname";
                         cmd.CommandText = query;
                         using (var reader = cmd.ExecuteReader()) {
+                            int j = 0;
                             while (reader.Read()) {
-                                searchResGrid.Items.Add(new SearchRes(){Address =  reader.GetString(1), busName = reader.GetString(0), City = reader.GetString(2), State = reader.GetString(3), Stars = reader.GetDouble(4), NumRev = reader.GetInt32(5), AvgRev = reader.GetDouble(6), TotalCheckin = reader.GetInt32(7)});
+                                j++;
+                                searchResGrid.Items.Add(new SearchRes() {
+                                    busName = reader.GetString(0),
+                                    Address = reader.GetString(1),
+                                    City = reader.GetString(2),
+                                    State = reader.GetString(3),
+                                    Stars = reader.GetDouble(4),
+                                    NumRev = reader.GetInt32(5),
+                                    AvgRev = reader.GetDouble(6),
+                                    TotalCheckin = reader.GetInt32(7)
+                                });
                             }
                         }
+
                     }
+
+
+                    
                 }
             }
         }
 
+        string PriceFiltering() {
+            string query = "";
+            var p1 = price1.IsChecked.GetValueOrDefault() == true;
+            var p2 = price2.IsChecked.GetValueOrDefault() == true;
+            var p3 = price3.IsChecked.GetValueOrDefault() == true;
+            var p4 = price4.IsChecked.GetValueOrDefault() == true;
+            if (p1 || p2 || p3 || p4) {
+                query += @" JOIN (SELECT a.bid from BUSINESSATT a INNER JOIN BUSINESS b ON b.bid = a.bid WHERE attname = 'RestaurantsPriceRange2' AND (";
+            }
+
+            if (p1) {
+                query += "CAST(BVAL AS INTEGER) = 1 ";
+            }
+
+            if (p2) {
+                query += " OR CAST(BVAL AS INTEGER) = 2 ";
+            }
+
+            if (p3) {
+                query += " OR CAST(BVAL AS INTEGER) = 3 ";
+            }
+
+            if (p4) {
+                query += " OR CAST(BVAL AS INTEGER) = 4 ";
+            }
+
+            query += ") ) r on r.bid = b.bid";
+            return query;
+        }
         //Add the needed columsn in the friends' reviews datagrid view.
         void SearchResultsCols() {
             DataGridTextColumn busNameCol = new DataGridTextColumn {
