@@ -175,6 +175,13 @@ namespace Milestone3 {
                         query += BikeFilter();
 
                         //filter by meals:
+                        query += BreakfastFilter();
+                        query += BrunchFilter();
+                        query += LunchFilter();
+                        query += DinnerFilter();
+                        query += DessertFilter();
+                        query += LatenightFilter();
+
 
                         query += " ORDER BY bname";
                         cmd.CommandText = query;
@@ -250,7 +257,6 @@ namespace Milestone3 {
             }
             return query;
         }
-
         string ReservationFilter() {
             string query = "";
             if (TakesRes.IsChecked.GetValueOrDefault()) {
@@ -265,7 +271,6 @@ namespace Milestone3 {
             }
             return query;
         }
-
         string OutdoorFilter() {
             string query = "";
             if (OutdoorSeat.IsChecked.GetValueOrDefault()) {
@@ -273,8 +278,6 @@ namespace Milestone3 {
             }
             return query;
         }
-
-
         string GKidsFilter() {
             string query = "";
             if (GoodKid.IsChecked.GetValueOrDefault()) {
@@ -322,9 +325,52 @@ namespace Milestone3 {
         //MEALS TO DO LATER
         string BreakfastFilter() {
             string query = "";
-            
+            if (Breakfast.IsChecked.GetValueOrDefault()) {
+                query += @" JOIN(SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'breakfast' AND bval = 'True') breakfast ON breakfast.bid = b.bid";
+            }
             return query;
         }
+
+        string BrunchFilter() {
+            string query = "";
+            if (Brunch.IsChecked.GetValueOrDefault()) {
+                query += @" JOIN(SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'brunch' AND bval = 'True') brunch ON brunch.bid = b.bid";
+            }
+            return query;
+        }
+
+        string LunchFilter() {
+            string query = "";
+            if (Lunch.IsChecked.GetValueOrDefault()) {
+                query += @" JOIN(SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'lunch' AND bval = 'True') lunch ON lunch.bid = b.bid";
+            }
+            return query;
+        }
+
+        string DinnerFilter() {
+            string query = "";
+            if (Dinner.IsChecked.GetValueOrDefault()) {
+                query += @" JOIN(SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'dinner' AND bval = 'True') dinner ON dinner.bid = b.bid";
+            }
+            return query;
+        }
+
+        string DessertFilter() {
+            string query = "";
+            if (Dessert.IsChecked.GetValueOrDefault()) {
+                query += @" JOIN(SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'dessert' AND bval = 'True') dessert ON dessert.bid = b.bid";
+            }
+            return query;
+        }
+
+        string LatenightFilter() {
+            string query = "";
+            if (LateNight.IsChecked.GetValueOrDefault()) {
+                query += @" JOIN(SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'latenight' AND bval = 'True') latenight ON latenight.bid = b.bid";
+            }
+            return query;
+        }
+
         //Add the needed columsn in the friends' reviews datagrid view.
         void SearchResultsCols() {
             DataGridTextColumn busNameCol = new DataGridTextColumn {
