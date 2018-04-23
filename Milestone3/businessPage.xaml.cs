@@ -31,12 +31,13 @@ namespace Milestone3 {
             SearchResultsCols();
 
             currUser = newUser;
-            
+            FillSorting();
         }
 
         private string buildConnString() {
-            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            //return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
             //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
+            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8282";        //Jomar Laptop Connection
         }
 
         //Populate states:
@@ -54,7 +55,6 @@ namespace Milestone3 {
                 }
             }
         }
-
 
         /***************************************************STATE CITY ZIP METHODS***************************************************/
 
@@ -135,82 +135,7 @@ namespace Milestone3 {
             }
         }
 
-        /***************************************************SEARCH RESULT METHODS***************************************************/
-        //Populate the populate teh whole search.
-        void PopulateSearchResults() {
-            searchResGrid.Items.Clear();
-            using (var conn = new NpgsqlConnection(buildConnString())) {
-                conn.Open();
-                using (var cmd = new NpgsqlCommand()) {
-                    cmd.Connection = conn;
-
-                    //Normal location filtering:
-                    if (stateBox.SelectedValue != null) {
-                        String query =
-                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
-
-                        int n = 0;
-                        foreach (var items in CatList()) {
-                            query +=
-                                @" JOIN (SELECT distinct business.bid FROM business, businesscat WHERE business.bid = businesscat.bid AND state = '#state#' AND city = '#city#' AND postalcode = '#zip#' AND catname = '#items#') t#n# ON t#n#.bid = b.bid";
-                            query = query.Replace("#n#", n.ToString());
-                            query = query.Replace("#items#", items);
-                            n++;
-                        }
-
-                        
-                        query = query.Replace("#state#", stateBox.SelectedValue.ToString());
-                        query = query.Replace("#city#", cityBox.SelectedValue.ToString());
-                        query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
-                        
-
-
-                        //Filtering by price:
-                        query += PriceFiltering();
-                        //filter by attributes:
-                        query += CreditFilter();
-                        query += ReservationFilter();
-                        query += WheelChairFilter();
-                        query += OutdoorFilter();
-                        query += GKidsFilter();
-                        query += GGroupsFilter();
-                        query += DeliveryFilter();
-                        query += ResTakeOutFilter();
-                        query += WiFiFilter();
-                        query += BikeFilter();
-
-                        //filter by meals:
-                        query += BreakfastFilter();
-                        query += BrunchFilter();
-                        query += LunchFilter();
-                        query += DinnerFilter();
-                        query += DessertFilter();
-                        query += LatenightFilter();
-
-
-                        query += " ORDER BY bname";
-                        cmd.CommandText = query;
-                        using (var reader = cmd.ExecuteReader()) {
-                            int j = 0;
-                            while (reader.Read()) {
-                                j++;
-                                searchResGrid.Items.Add(new SearchRes() {
-                                    busName = reader.GetString(0),
-                                    Address = reader.GetString(1),
-                                    City = reader.GetString(2),
-                                    State = reader.GetString(3),
-                                    Stars = reader.GetDouble(4),
-                                    NumRev = reader.GetInt32(5),
-                                    AvgRev = reader.GetDouble(6),
-                                    TotalCheckin = reader.GetInt32(7)
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
+        /***************************************************Business Attributes Filters:***************************************************/
         string PriceFiltering() {
             string query = "";
             bool orstatement = false;
@@ -225,7 +150,7 @@ namespace Milestone3 {
                 if (p1) {
                     query += "CAST(BVAL AS INTEGER) = 1 ";
                 }
-                
+
                 if (p2) {
                     if (p1) {
                         query += " OR ";
@@ -233,7 +158,7 @@ namespace Milestone3 {
                     query += " CAST(BVAL AS INTEGER) = 2 ";
                 }
 
-                
+
                 if (p3) {
                     if (p1 || p2) {
                         query += " OR ";
@@ -241,7 +166,7 @@ namespace Milestone3 {
                     query += " CAST(BVAL AS INTEGER) = 3 ";
                 }
 
-                
+
                 if (p4) {
                     if (p1 || p2 || p3) {
                         query += " OR ";
@@ -251,7 +176,7 @@ namespace Milestone3 {
 
                 query += ") ) r on r.bid = b.bid";
             }
-            
+
             return query;
         }
 
@@ -326,8 +251,7 @@ namespace Milestone3 {
             return query;
         }
 
-        
-        //MEALS TO DO LATER
+        //MEALS:
         string BreakfastFilter() {
             string query = "";
             if (Breakfast.IsChecked.GetValueOrDefault()) {
@@ -376,6 +300,116 @@ namespace Milestone3 {
             return query;
         }
 
+        /***************************************************Sorting Methods:***************************************************/
+
+        void FillSorting () {
+            sortResDropBox.Items.Add("Business Name (default sort)");
+            sortResDropBox.Items.Add("Highest Ratings (stars)");
+            sortResDropBox.Items.Add("Most Reviewed");
+            sortResDropBox.Items.Add("Best Review Rating (highest avg review rating)");
+            sortResDropBox.Items.Add("Most Check-Ins");
+            sortResDropBox.Items.Add("Nearest");
+        }
+
+        string CheckSorting() {
+            var query = " ORDER BY bname ";
+            if (sortResDropBox.SelectedItem == null ) {
+                return query;
+            }
+            else if(sortResDropBox.SelectedItem.ToString() == "Business Name (default sort)") {
+                query = " ORDER BY bname ";
+            }
+            else if (sortResDropBox.SelectedItem.ToString() == "Highest Ratings (stars)") {
+                query = " ORDER BY stars ";
+            }
+            else if (sortResDropBox.SelectedItem.ToString() == "Most Reviewed") {
+                query = " ORDER BY reviewCount ";
+            }
+            else if (sortResDropBox.SelectedItem.ToString() == "Best Review Rating (highest avg review rating)") {
+                query = " ORDER BY reviewRating ";
+            }
+            else if (sortResDropBox.SelectedItem.ToString() == "Most Check-Ins") {
+                query = " ORDER BY numCheckins ";
+            }
+            
+            return query;
+        }
+        /***************************************************SEARCH RESULT METHODS***************************************************/
+        //Populate the populate teh whole search.
+        void PopulateSearchResults() {
+            searchResGrid.Items.Clear();
+            using (var conn = new NpgsqlConnection(buildConnString())) {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand()) {
+                    cmd.Connection = conn;
+
+                    //Normal location filtering:
+                    if (stateBox.SelectedValue != null) {
+                        String query =
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
+
+                        int n = 0;
+                        foreach (var items in CatList()) {
+                            query +=
+                                @" JOIN (SELECT distinct business.bid FROM business, businesscat WHERE business.bid = businesscat.bid AND state = '#state#' AND city = '#city#' AND postalcode = '#zip#' AND catname = '#items#') t#n# ON t#n#.bid = b.bid";
+                            query = query.Replace("#n#", n.ToString());
+                            query = query.Replace("#items#", items);
+                            n++;
+                        }
+
+                        
+                        query = query.Replace("#state#", stateBox.SelectedValue.ToString());
+                        query = query.Replace("#city#", cityBox.SelectedValue.ToString());
+                        query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
+                        
+
+
+                        //Filtering by price:
+                        query += PriceFiltering();
+                        //filter by attributes:
+                        query += CreditFilter();
+                        query += ReservationFilter();
+                        query += WheelChairFilter();
+                        query += OutdoorFilter();
+                        query += GKidsFilter();
+                        query += GGroupsFilter();
+                        query += DeliveryFilter();
+                        query += ResTakeOutFilter();
+                        query += WiFiFilter();
+                        query += BikeFilter();
+
+                        //filter by meals:
+                        query += BreakfastFilter();
+                        query += BrunchFilter();
+                        query += LunchFilter();
+                        query += DinnerFilter();
+                        query += DessertFilter();
+                        query += LatenightFilter();
+
+                        //sorting:
+                        query += CheckSorting();
+                        cmd.CommandText = query;
+                        using (var reader = cmd.ExecuteReader()) {
+                            int j = 0;
+                            while (reader.Read()) {
+                                j++;
+                                searchResGrid.Items.Add(new SearchRes() {
+                                    busName = reader.GetString(0),
+                                    Address = reader.GetString(1),
+                                    City = reader.GetString(2),
+                                    State = reader.GetString(3),
+                                    Stars = reader.GetDouble(4),
+                                    NumRev = reader.GetInt32(5),
+                                    AvgRev = reader.GetDouble(6),
+                                    TotalCheckin = reader.GetInt32(7)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         //Add the needed columsn in the friends' reviews datagrid view.
         void SearchResultsCols() {
             DataGridTextColumn busNameCol = new DataGridTextColumn {
