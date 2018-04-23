@@ -246,7 +246,7 @@ namespace Milestone3 {
         string CreditFilter() {
             string query = "";
             if (AccCredCard.IsChecked.GetValueOrDefault()) {
-                query += @"JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'BusinessAcceptsCreditCards' AND bval = 'True') r1 ON r1.bid = b.bid";
+                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'BusinessAcceptsCreditCards' AND bval = 'True') r1 ON r1.bid = b.bid";
             }
             return query;
         }
@@ -306,21 +306,21 @@ namespace Milestone3 {
         string WiFiFilter() {
             string query = "";
             if (FWifi.IsChecked.GetValueOrDefault()) {
-                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'WiFi' AND bval = 'free') resTakeOut ON resTakeOut.bid = b.bid";
+                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'WiFi' AND bval = 'free') wfi ON wfi.bid = b.bid";
             }
             return query;
         }
         string BikeFilter() {
             string query = "";
             if (BikePark.IsChecked.GetValueOrDefault()) {
-                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'BikeParking' AND bval = 'True') resTakeOut ON resTakeOut.bid = b.bid";
+                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'BikeParking' AND bval = 'True') bike ON bike.bid = b.bid";
             }
             return query;
         }
 
         
         //MEALS TO DO LATER
-        string MealsFilter() {
+        string BreakfastFilter() {
             string query = "";
             
             return query;
