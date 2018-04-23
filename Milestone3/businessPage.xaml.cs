@@ -23,6 +23,7 @@ namespace Milestone3 {
     public partial class businessPage : Page {
 
         User currUser;
+        SearchRes selectedBusiness;
 
         public businessPage(User newUser) {
             InitializeComponent();
@@ -147,7 +148,7 @@ namespace Milestone3 {
                     //Normal location filtering:
                     if (stateBox.SelectedValue != null) {
                         String query =
-                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins, b.bid FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
 
                         int n = 0;
                         foreach (var items in CatList()) {
@@ -202,7 +203,8 @@ namespace Milestone3 {
                                     Stars = reader.GetDouble(4),
                                     NumRev = reader.GetInt32(5),
                                     AvgRev = reader.GetDouble(6),
-                                    TotalCheckin = reader.GetInt32(7)
+                                    TotalCheckin = reader.GetInt32(7),
+                                    BID = reader.GetString(8)
                                 });
                             }
                         }
@@ -421,6 +423,11 @@ namespace Milestone3 {
                 Binding = new Binding("TotalCheckin")
             };
 
+            DataGridTextColumn BIDCol = new DataGridTextColumn {
+                Header = "BID",
+                Binding = new Binding("BID")
+            };
+
             searchResGrid.Columns.Add(busNameCol);
             searchResGrid.Columns.Add(addrNameCol);
             searchResGrid.Columns.Add(cityCol);
@@ -430,6 +437,7 @@ namespace Milestone3 {
             searchResGrid.Columns.Add(numRevCol);
             searchResGrid.Columns.Add(avgRevCol);
             searchResGrid.Columns.Add(totalCheckinCol);
+            searchResGrid.Columns.Add(BIDCol);
         }
 
         private void Search_Businesses_Click(object sender, RoutedEventArgs e) {
@@ -441,6 +449,59 @@ namespace Milestone3 {
 
         }
 
-        
+        private void businessSelected(object sender, SelectionChangedEventArgs e) {
+            if (searchResGrid.SelectedItem != null) {
+                selectedBusiness = (SearchRes)searchResGrid.SelectedItem;
+                businessNameLabel.Text = selectedBusiness.busName;
+            }
+        }
+
+        private void addCheckinClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected.");
+            } else {
+                TimeSpan startMorning = new TimeSpan(6,0,0);
+                TimeSpan endMorning = new TimeSpan(12,0,0);
+
+                TimeSpan endAfteroon = new TimeSpan(17,0,0);
+
+                TimeSpan endEvening = new TimeSpan(23, 0, 0);
+
+                TimeSpan now = DateTime.Now.TimeOfDay;
+
+                businessNameLabel.Text = DateTime.Now.DayOfWeek.ToString();
+
+                using (var conn = new NpgsqlConnection(buildConnString())) {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand()) {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "SELECT * FROM CHECKIN WHERE BID = '" + selectedBusiness.BID + "' AND CI_DAYOFWEEK = '" + DateTime.Now.DayOfWeek.ToString() + "'";
+                        using (var reader = cmd.ExecuteReader()) {
+                            if (!reader.HasRows) {
+                                var conn2 = new NpgsqlConnection(buildConnString());
+                                conn2.Open();
+                                var cmd2 = new NpgsqlCommand();
+                                cmd2.Connection = conn2;
+
+                                //No tuple found for specified day. Need to insert a new tuple for it.
+                                cmd2.CommandText = "INSERT INTO checkin (BID, CI_DayOfWeek, morning, afternoon, evening, night) VALUES ('" + selectedBusiness.BID + "','" + DateTime.Now.DayOfWeek + "',0,1,0,0";                //Insert a new tuple for selected business with current day and 1 afternoon checkin.
+                                cmd2.ExecuteReader();    
+                            } else {
+                                //Tuple already exists. Just update and increment whatever value is needed.
+                                var conn2 = new NpgsqlConnection(buildConnString());
+                                conn2.Open();
+                                var cmd2 = new NpgsqlCommand();
+                                cmd2.Connection = conn2;
+
+                                cmd2.CommandText = "UPDATE CHECKIN SET AFTERNOON = AFTERNOON + 1 WHERE BID = '" + selectedBusiness.BID + "' AND CI_DAYOFWEEK = '" + DateTime.Now.DayOfWeek + "'";
+                                cmd2.ExecuteReader();
+                            }
+                        }
+
+                        PopulateSearchResults();
+                    }
+                }
+            }
+        }
     }
 }

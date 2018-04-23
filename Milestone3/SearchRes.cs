@@ -15,5 +15,6 @@ namespace Milestone3 {
         public int NumRev { get; set; }
         public double AvgRev { get; set; }
         public int TotalCheckin { get; set; }
+        public string BID { get; set; }
     }
 }
