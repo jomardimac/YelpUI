@@ -22,16 +22,22 @@ namespace Milestone3 {
     /// </summary>
     public partial class businessPage : Page {
 
-        public businessPage() {
+        User currUser;
+
+        public businessPage(User newUser) {
             InitializeComponent();
             PopulateStates();
             PopulateCat();
             SearchResultsCols();
+
+            currUser = newUser;
+            listOfBusCat.Items.Add(currUser.name);
+            listOfBusCat.Items.Add(currUser.uid);
         }
 
         private string buildConnString() {
-            //return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
-            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
+            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
         }
 
         //Populate states:
