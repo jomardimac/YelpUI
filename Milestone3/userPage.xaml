@@ -9,7 +9,6 @@
       Title="userPage">
 
     <Grid>
-        <Label Content="Select Current User:" HorizontalAlignment="Left" Margin="17,10,0,0" VerticalAlignment="Top" Width="133"/>
         <TextBox x:Name="nameBox" HorizontalAlignment="Left" Height="23" Margin="17,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" KeyDown="nameEnterPressed"/>
         <ListBox x:Name="possibleUIDS" HorizontalAlignment="Left" Height="77" Margin="17,69,0,0" VerticalAlignment="Top" Width="391" SelectionChanged="uidChosen"/>
         <Label Content="User Information" HorizontalAlignment="Left" Margin="433,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.368,-0.615"/>
@@ -38,6 +37,7 @@
         <TextBox HorizontalAlignment="Left" Height="23" Margin="858,116,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
         <Label Content="Set User Location:" HorizontalAlignment="Left" Margin="858,10,0,0" VerticalAlignment="Top"/>
         <Button x:Name="setLoactionButton" Content="Set Location" HorizontalAlignment="Left" Margin="858,144,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="toBusiness" Content="Business Information" HorizontalAlignment="Left" Margin="17,13,0,0" VerticalAlignment="Top" Width="119" Click="toBusiness_Click"/>
 
     </Grid>
 </Page>

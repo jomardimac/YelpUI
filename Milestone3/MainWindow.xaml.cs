@@ -20,19 +20,10 @@ namespace Milestone3 {
     public partial class MainWindow : Window {
 
         public userPage activeUserPage = new userPage();
-        public businessPage activeBusinessPage = new businessPage();
 
         public MainWindow() {
             InitializeComponent();
             Main.Content = activeUserPage;
-        }
-
-        private void userButtonClicked(object sender, RoutedEventArgs e) {
-            Main.Content = activeUserPage;
-        }
-
-        private void businessButtonClicked(object sender, RoutedEventArgs e) {
-            Main.Content = activeBusinessPage;
         }
     }
 }

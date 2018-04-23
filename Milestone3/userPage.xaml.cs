@@ -20,7 +20,7 @@ namespace Milestone3 {
     /// </summary>
     public partial class userPage : Page {
 
-        public float latitude, longitude;
+        User currUser;
 
         public userPage() {
             InitializeComponent();
@@ -67,7 +67,7 @@ namespace Milestone3 {
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (possibleUIDS.SelectedValue != null) {
-                        cmd.CommandText = "SELECT dbuser.name, dbuser.avgstars, dbuser.fans, dbuser.yelping_since, dbuser.funny, dbuser.cool, dbuser.useful FROM DBUSER WHERE DBUSER.UID = '" + possibleUIDS.SelectedValue.ToString() + "'";
+                        cmd.CommandText = "SELECT dbuser.name, dbuser.avgstars, dbuser.fans, dbuser.yelping_since, dbuser.funny, dbuser.cool, dbuser.useful, dbuser.uid FROM DBUSER WHERE DBUSER.UID = '" + possibleUIDS.SelectedValue.ToString() + "'";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 usersNameBox.Text = reader.GetString(0);
@@ -77,6 +77,8 @@ namespace Milestone3 {
                                 userFunny.Text = reader.GetString(4).ToString();
                                 userCool.Text = reader.GetString(5).ToString();
                                 userUseful.Text = reader.GetString(6).ToString();
+
+                                currUser = new User(reader.GetString(0), reader.GetString(7), 0.0, 0.0);
                             }
                         }
                     }
@@ -181,6 +183,15 @@ namespace Milestone3 {
                         populateFriendsReviews();
                     }
                 }
+            }
+        }
+
+        private void toBusiness_Click(object sender, RoutedEventArgs e) {
+            if (currUser != null) {
+                businessPage newBusiness = new businessPage(currUser);
+                this.NavigationService.Navigate(newBusiness);
+            } else {
+                MessageBox.Show("No User Selected.");
             }
         }
 

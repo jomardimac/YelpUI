@@ -7,10 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1000">
     <Grid>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-            <Button x:Name="userButton" Content="User" Height="25" MinWidth="50" Click="userButtonClicked"/>
-            <Button x:Name="businessButton" Content="Business" Height="25" MinWidth="50" Click="businessButtonClicked"/>
-        </StackPanel>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top"/>
         <Frame x:Name="Main" Margin="0,25,0,0"/>
     </Grid>
 </Window>
