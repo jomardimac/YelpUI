@@ -31,8 +31,7 @@ namespace Milestone3 {
             SearchResultsCols();
 
             currUser = newUser;
-            listOfBusCat.Items.Add(currUser.name);
-            listOfBusCat.Items.Add(currUser.uid);
+            
         }
 
         private string buildConnString() {
