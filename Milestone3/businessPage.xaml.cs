@@ -191,31 +191,45 @@ namespace Milestone3 {
 
         string PriceFiltering() {
             string query = "";
+            bool orstatement = false;
             var p1 = price1.IsChecked.GetValueOrDefault() == true;
             var p2 = price2.IsChecked.GetValueOrDefault() == true;
             var p3 = price3.IsChecked.GetValueOrDefault() == true;
             var p4 = price4.IsChecked.GetValueOrDefault() == true;
+
+            //check if more than 2 are checked:
             if (p1 || p2 || p3 || p4) {
                 query += @" JOIN (SELECT a.bid from BUSINESSATT a INNER JOIN BUSINESS b ON b.bid = a.bid WHERE attname = 'RestaurantsPriceRange2' AND (";
-            }
+                if (p1) {
+                    query += "CAST(BVAL AS INTEGER) = 1 ";
+                }
+                
+                if (p2) {
+                    if (p1) {
+                        query += " OR ";
+                    }
+                    query += " CAST(BVAL AS INTEGER) = 2 ";
+                }
 
-            if (p1) {
-                query += "CAST(BVAL AS INTEGER) = 1 ";
-            }
+                
+                if (p3) {
+                    if (p1 || p2) {
+                        query += " OR ";
+                    }
+                    query += " CAST(BVAL AS INTEGER) = 3 ";
+                }
 
-            if (p2) {
-                query += " OR CAST(BVAL AS INTEGER) = 2 ";
-            }
+                
+                if (p4) {
+                    if (p1 || p2 || p3) {
+                        query += " OR ";
+                    }
+                    query += " CAST(BVAL AS INTEGER) = 4 ";
+                }
 
-            if (p3) {
-                query += " OR CAST(BVAL AS INTEGER) = 3 ";
+                query += ") ) r on r.bid = b.bid";
             }
-
-            if (p4) {
-                query += " OR CAST(BVAL AS INTEGER) = 4 ";
-            }
-
-            query += ") ) r on r.bid = b.bid";
+            
             return query;
         }
         //Add the needed columsn in the friends' reviews datagrid view.
