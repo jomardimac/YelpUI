@@ -23,18 +23,18 @@ namespace Milestone3 {
 
         public businessPage() {
             InitializeComponent();
-            populateStates();
-            populateCat();
+            PopulateStates();
+            PopulateCat();
             SearchResultsCols();
         }
 
         private string buildConnString() {
-            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
-            //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
+            //return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
         }
 
         //Populate states:
-        void populateStates() {
+        private void PopulateStates() {
             using (var conn = new NpgsqlConnection(buildConnString())) {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand()) {
@@ -93,7 +93,7 @@ namespace Milestone3 {
         /***************************************************BUSINESS CAT METHODS***************************************************/
 
         //populate categories:
-        void populateCat() {
+        private void PopulateCat() {
             using (var conn = new NpgsqlConnection(buildConnString())) {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand()) {
@@ -114,7 +114,7 @@ namespace Milestone3 {
             }
         }
 
-        private List<String> catList() {
+        private List<String> CatList() {
             List<String> str = new List<string>();
             foreach (var item in listOfBusCat.Items) {
                str.Add(item.ToString());
@@ -139,19 +139,24 @@ namespace Milestone3 {
                     cmd.Connection = conn;
                     if (cityBox.SelectedValue != null) {
                         String query =
-                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars FROM business as b, businesscat as bc    WHERE b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
-                        foreach (var items in catList()) {
-                            query += " AND bc.catname = '" + items.ToString() + "' ";
-                        }
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
 
-                        query += "ORDER BY bname";
+                        int n = 0;
+                        foreach (var items in CatList()) {
+                            query += @" JOIN (SELECT distinct business.bid FROM business, businesscat WHERE business.bid = businesscat.bid AND state = '#state#' AND city = '#city#' AND postalcode = '#zip#' AND catname = '#items#') t#n# ON t#n#.bid = b.bid";
+                            query = query.Replace("#n#", n.ToString());
+                            query = query.Replace("#items#", items);
+                            n++;
+                        }
+                        
+                        query += " ORDER BY bname";
                         query = query.Replace("#state#", stateBox.SelectedValue.ToString());
                         query = query.Replace("#city#", cityBox.SelectedValue.ToString());
                         query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
                         cmd.CommandText = query;
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
-                                searchResGrid.Items.Add(new SearchRes(){Address =  reader.GetString(1), busName = reader.GetString(0), City = reader.GetString(2), State = reader.GetString(3)});
+                                searchResGrid.Items.Add(new SearchRes(){Address =  reader.GetString(1), busName = reader.GetString(0), City = reader.GetString(2), State = reader.GetString(3), Stars = reader.GetDouble(4), NumRev = reader.GetInt32(5), AvgRev = reader.GetDouble(6), TotalCheckin = reader.GetInt32(7)});
                             }
                         }
                     }
@@ -175,6 +180,7 @@ namespace Milestone3 {
                 Header = "City",
                 Binding = new Binding("City")
             };
+
             DataGridTextColumn stateCol = new DataGridTextColumn {
                 Header = "State",
                 Binding = new Binding("State")
