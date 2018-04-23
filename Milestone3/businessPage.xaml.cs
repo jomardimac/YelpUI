@@ -20,6 +20,7 @@ namespace Milestone3 {
     /// Interaction logic for businessPage.xaml
     /// </summary>
     public partial class businessPage : Page {
+
         public businessPage() {
             InitializeComponent();
             populateStates();
@@ -63,6 +64,7 @@ namespace Milestone3 {
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 cityBox.Items.Add(reader.GetString(0));
+                                
                             }
                         }
                     }

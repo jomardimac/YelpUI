@@ -9,5 +9,6 @@ namespace Milestone3 {
         public string name { get; set; }
         public string avgStars { get; set; }
         public string yelpingSince { get; set; }
+        public string fid { get; set; }
     }
 }

@@ -18,17 +18,21 @@ namespace Milestone3 {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+
+        public userPage activeUserPage = new userPage();
+        public businessPage activeBusinessPage = new businessPage();
+
         public MainWindow() {
             InitializeComponent();
-            Main.Content = new userPage();
+            Main.Content = activeUserPage;
         }
 
         private void userButtonClicked(object sender, RoutedEventArgs e) {
-            Main.Content = new userPage();
+            Main.Content = activeUserPage;
         }
 
         private void businessButtonClicked(object sender, RoutedEventArgs e) {
-            Main.Content = new businessPage();
+            Main.Content = activeBusinessPage;
         }
     }
 }

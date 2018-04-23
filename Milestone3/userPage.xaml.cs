@@ -19,6 +19,9 @@ namespace Milestone3 {
     /// Interaction logic for userPage.xaml
     /// </summary>
     public partial class userPage : Page {
+
+        public float latitude, longitude;
+
         public userPage() {
             InitializeComponent();
             addFriendsListCols();
@@ -88,10 +91,10 @@ namespace Milestone3 {
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (possibleUIDS.SelectedValue != null) {
-                        cmd.CommandText = "SELECT DBUSER.NAME, DBUSER.AVGSTARS, DBUSER.YELPING_SINCE FROM DBUSER WHERE DBUSER.UID IN (SELECT FRIENDS.FID FROM FRIENDS WHERE UID = '" + possibleUIDS.SelectedValue.ToString() + "')";
+                        cmd.CommandText = "SELECT DBUSER.NAME, DBUSER.AVGSTARS, DBUSER.YELPING_SINCE, DBUSER.UID FROM DBUSER WHERE DBUSER.UID IN (SELECT FRIENDS.FID FROM FRIENDS WHERE UID = '" + possibleUIDS.SelectedValue.ToString() + "')";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
-                                friendsList.Items.Add(new Friend() { name = reader.GetString(0), avgStars = reader.GetDouble(1).ToString(), yelpingSince = reader.GetDate(2).ToString() });
+                                friendsList.Items.Add(new Friend() { name = reader.GetString(0), avgStars = reader.GetDouble(1).ToString(), yelpingSince = reader.GetDate(2).ToString(), fid = reader.GetString(3) });
                             }
                         }
                     }
@@ -161,6 +164,24 @@ namespace Milestone3 {
 
         }
 
+        private void removeFriendClicked(object sender, RoutedEventArgs e) {
+            if (friendsList.SelectedItem == null) {
+                MessageBox.Show("No friend selected.");
+            } else {
+                Friend friend2Remove = (Friend)friendsList.SelectedItem;
+                using (var conn = new NpgsqlConnection(buildConnString())) {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand()) {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "DELETE FROM FRIENDS WHERE UID = '" + possibleUIDS.SelectedValue.ToString() + "' AND FID = '" + friend2Remove.fid + "'";
+                        cmd.ExecuteReader();
+                        populateFriendsList();
+                        populateFriendsReviews();
+                    }
+                }
+            }
+        }
+
         //Add the columns needed in the friendsList datagrid view.
         void addFriendsListCols() {
             DataGridTextColumn nameCol = new DataGridTextColumn();
@@ -180,6 +201,11 @@ namespace Milestone3 {
             sinceCol.Binding = new Binding("yelpingSince");
             sinceCol.Width = 150;
             friendsList.Columns.Add(sinceCol);
+
+            DataGridTextColumn fidCol = new DataGridTextColumn();
+            fidCol.Header = "FID";
+            fidCol.Binding = new Binding("fid");
+            friendsList.Columns.Add(fidCol);
         }
     }
 }
