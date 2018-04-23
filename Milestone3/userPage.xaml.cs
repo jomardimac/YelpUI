@@ -174,6 +174,8 @@ namespace Milestone3 {
                     using (var cmd = new NpgsqlCommand()) {
                         cmd.Connection = conn;
                         cmd.CommandText = "DELETE FROM FRIENDS WHERE UID = '" + possibleUIDS.SelectedValue.ToString() + "' AND FID = '" + friend2Remove.fid + "'";
+                        friendsList.Items.Clear();
+                        friendsReviews.Items.Clear();
                         cmd.ExecuteReader();
                         populateFriendsList();
                         populateFriendsReviews();

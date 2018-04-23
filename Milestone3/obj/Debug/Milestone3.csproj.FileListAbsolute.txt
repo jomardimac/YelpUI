@@ -1,7 +1,6 @@
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\Milestone3.exe.config
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\Milestone3.exe
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\Milestone3.pdb
-D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\Milestone3.csprojResolveAssemblyReference.cache
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\businessPage.g.cs
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\MainWindow.g.cs
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\userPage.g.cs
@@ -51,3 +50,4 @@ D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Windows.C
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.Layout.Toolkit.dll
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\WPFToolkit.dll
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Threading.Tasks.Extensions.xml
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\Milestone3.csprojResolveAssemblyReference.cache
