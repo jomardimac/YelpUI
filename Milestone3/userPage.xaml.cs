@@ -220,5 +220,17 @@ namespace Milestone3 {
             fidCol.Binding = new Binding("fid");
             friendsList.Columns.Add(fidCol);
         }
+
+        private void setLocationClicked(object sender, RoutedEventArgs e) {
+            if (currUser == null) {
+                MessageBox.Show("No User Selected");
+            } else {
+                if (latBox.Text != null && longBox.Text != null) {
+                    currUser.lat = Convert.ToDouble(latBox.Text);
+                    currUser.longi = Convert.ToDouble(longBox.Text);
+                }
+
+            }
+        }
     }
 }

@@ -32,11 +32,11 @@
         <DataGrid x:Name="friendsReviews" HorizontalAlignment="Left" Height="423" Margin="352,179,0,0" VerticalAlignment="Top" Width="626"/>
         <Button x:Name="removeFriend" Content="Remove Selected Friend" HorizontalAlignment="Left" Margin="93,585,0,0" VerticalAlignment="Top" Width="132" Click="removeFriendClicked"/>
         <Label Content="Latitude:" HorizontalAlignment="Left" Margin="858,36,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="latBox" HorizontalAlignment="Left" Height="23" Margin="858,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <TextBox x:Name="latBox" HorizontalAlignment="Left" Height="23" Margin="858,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Longitude:" HorizontalAlignment="Left" Margin="858,90,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="858,116,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <TextBox x:Name="longBox" HorizontalAlignment="Left" Height="23" Margin="858,116,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Set User Location:" HorizontalAlignment="Left" Margin="858,10,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="setLoactionButton" Content="Set Location" HorizontalAlignment="Left" Margin="858,144,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="setLoactionButton" Content="Set Location" HorizontalAlignment="Left" Margin="858,144,0,0" VerticalAlignment="Top" Width="75" Click="setLocationClicked"/>
         <Button x:Name="toBusiness" Content="Business Information" HorizontalAlignment="Left" Margin="17,13,0,0" VerticalAlignment="Top" Width="119" Click="toBusiness_Click"/>
 
     </Grid>
