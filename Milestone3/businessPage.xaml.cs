@@ -177,7 +177,6 @@ namespace Milestone3 {
         /***************************************************Business Attributes Filters:***************************************************/
         string PriceFiltering() {
             string query = "";
-            bool orstatement = false;
             var p1 = price1.IsChecked.GetValueOrDefault() == true;
             var p2 = price2.IsChecked.GetValueOrDefault() == true;
             var p3 = price3.IsChecked.GetValueOrDefault() == true;
