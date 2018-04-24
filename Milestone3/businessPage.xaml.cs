@@ -46,9 +46,9 @@ namespace Milestone3 {
         }
 
         private string buildConnString() {
-            //return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
             //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
-            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8282";        //Jomar Laptop Connection
+            //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8282";        //Jomar Laptop Connection
         }
 
         //Populate states:
@@ -649,6 +649,26 @@ namespace Milestone3 {
                 MessageBox.Show("No Business Selected. Please Select One.");
             } else {
                 Page3 p = new Page3(selectedBusiness);
+                this.NavigationService.Navigate(p);
+            }
+        }
+
+        private void numBusClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected. Please Select One.");
+            }
+            else {
+                chart2 p = new chart2(selectedBusiness);
+                this.NavigationService.Navigate(p);
+            }
+        }
+
+        private void numCheckinsClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected. Please Select One.");
+            }
+            else {
+                chart1 p = new chart1(selectedBusiness);
                 this.NavigationService.Navigate(p);
             }
         }
