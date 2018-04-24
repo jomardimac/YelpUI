@@ -1,0 +1,18 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Milestone3"
+      xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Class="Milestone3.chart2"
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="1000"
+      Title="chart2">
+
+    <Grid>
+        <chartingToolkit:Chart HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="556" Width="742" Name= "numBusChart">
+            <chartingToolkit:ColumnSeries HorizontalAlignment="Left" Height="514" VerticalAlignment="Top" Width="790" Title="# of Business per zip" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" Margin="0,0,-127,0"/>
+        </chartingToolkit:Chart>
+
+    </Grid>
+</Page>
