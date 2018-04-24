@@ -9,12 +9,21 @@ Milestone3
 none
 false
 DEBUG;TRACE
+<<<<<<< HEAD
 C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\App.xaml
 3-1899746996
 
 11-1308902940
 7495949486
 businessPage.xaml;MainWindow.xaml;userPage.xaml;
+=======
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\App.xaml
+41644456504
+
+13-1164897185
+74138695095
+businessPage.xaml;MainWindow.xaml;Page3.xaml;userPage.xaml;
+>>>>>>> devon
 
 False
 

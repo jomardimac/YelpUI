@@ -227,8 +227,12 @@ namespace Milestone3 {
                 MessageBox.Show("No User Selected");
             } else {
                 if (latBox.Text != null && longBox.Text != null) {
-                    currUser.lat = Convert.ToDouble(latBox.Text);
-                    currUser.longi = Convert.ToDouble(longBox.Text);
+                    try {
+                        currUser.lat = Convert.ToDouble(latBox.Text);
+                        currUser.longi = Convert.ToDouble(longBox.Text);
+                    } catch {
+
+                    }
                 }
 
             }

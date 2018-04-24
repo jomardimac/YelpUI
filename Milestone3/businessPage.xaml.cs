@@ -23,16 +23,26 @@ namespace Milestone3 {
     public partial class businessPage : Page {
 
         User currUser;
+        SearchRes selectedBusiness;
 
         public businessPage(User newUser) {
             InitializeComponent();
             PopulateStates();
             PopulateCat();
+            populateStars();
             SearchResultsCols();
 
             PopulateTimeFilters();
             currUser = newUser;
             FillSorting();
+        }
+
+        private void populateStars() {
+            selectedRatingDropBox.Items.Add(1);
+            selectedRatingDropBox.Items.Add(2);
+            selectedRatingDropBox.Items.Add(3);
+            selectedRatingDropBox.Items.Add(4);
+            selectedRatingDropBox.Items.Add(5);
         }
 
         private string buildConnString() {
@@ -375,7 +385,7 @@ namespace Milestone3 {
                     //Normal location filtering:
                     if (stateBox.SelectedValue != null) {
                         String query =
-                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b ";
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins,b.bid, b.latitude, b.longitude FROM business as b ";
 
                         int n = 0;
                         foreach (var items in CatList()) {
@@ -438,6 +448,10 @@ namespace Milestone3 {
                             int j = 0;
                             while (reader.Read()) {
                                 j++;
+                                double bLat = reader.GetDouble(9);
+                                double bLong = reader.GetDouble(10);
+                                double distance = getDistance(currUser.lat, currUser.longi, bLat, bLong);
+                                distance = Math.Round(distance, 2);
                                 searchResGrid.Items.Add(new SearchRes() {
                                     busName = reader.GetString(0),
                                     Address = reader.GetString(1),
@@ -446,7 +460,9 @@ namespace Milestone3 {
                                     Stars = reader.GetDouble(4),
                                     NumRev = reader.GetInt32(5),
                                     AvgRev = reader.GetDouble(6),
-                                    TotalCheckin = reader.GetInt32(7)
+                                    TotalCheckin = reader.GetInt32(7),
+                                    BID = reader.GetString(8),
+                                    Distance = distance
                                 });
                             }
                         }
@@ -500,6 +516,11 @@ namespace Milestone3 {
                 Binding = new Binding("TotalCheckin")
             };
 
+            DataGridTextColumn BIDCol = new DataGridTextColumn {
+                Header = "BID",
+                Binding = new Binding("BID")
+            };
+
             searchResGrid.Columns.Add(busNameCol);
             searchResGrid.Columns.Add(addrNameCol);
             searchResGrid.Columns.Add(cityCol);
@@ -509,6 +530,7 @@ namespace Milestone3 {
             searchResGrid.Columns.Add(numRevCol);
             searchResGrid.Columns.Add(avgRevCol);
             searchResGrid.Columns.Add(totalCheckinCol);
+            searchResGrid.Columns.Add(BIDCol);
         }
 
         private void Search_Businesses_Click(object sender, RoutedEventArgs e) {
@@ -520,6 +542,116 @@ namespace Milestone3 {
 
         }
 
-        
+        private void businessSelected(object sender, SelectionChangedEventArgs e) {
+            if (searchResGrid.SelectedItem != null) {
+                selectedBusiness = (SearchRes)searchResGrid.SelectedItem;
+                businessNameLabel.Text = selectedBusiness.busName;
+            }
+        }
+
+        private void addCheckinClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected.");
+            } else {
+                TimeSpan startMorning = new TimeSpan(6,0,0);
+                TimeSpan endMorning = new TimeSpan(12,0,0);
+                TimeSpan endAfteroon = new TimeSpan(17,0,0);
+                TimeSpan endEvening = new TimeSpan(23, 0, 0);
+                TimeSpan now = DateTime.Now.TimeOfDay;
+
+                using (var conn = new NpgsqlConnection(buildConnString())) {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand()) {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "SELECT * FROM CHECKIN WHERE BID = '" + selectedBusiness.BID + "' AND CI_DAYOFWEEK = '" + DateTime.Now.DayOfWeek.ToString() + "'";
+                        using (var reader = cmd.ExecuteReader()) {
+                            if (!reader.HasRows) {
+                                var conn2 = new NpgsqlConnection(buildConnString());
+                                conn2.Open();
+                                var cmd2 = new NpgsqlCommand();
+                                cmd2.Connection = conn2;
+
+                                //No tuple found for specified day. Need to insert a new tuple for it.
+                                cmd2.CommandText = "INSERT INTO checkin (BID, CI_DayOfWeek, morning, afternoon, evening, night) VALUES ('" + selectedBusiness.BID + "','" + DateTime.Now.DayOfWeek + "',0,1,0,0)";                //Insert a new tuple for selected business with current day and 1 afternoon checkin.
+                                cmd2.ExecuteReader();    
+                            } else {
+                                //Tuple already exists. Just update and increment whatever value is needed.
+                                var conn2 = new NpgsqlConnection(buildConnString());
+                                conn2.Open();
+                                var cmd2 = new NpgsqlCommand();
+                                cmd2.Connection = conn2;
+
+                                cmd2.CommandText = "UPDATE CHECKIN SET AFTERNOON = AFTERNOON + 1 WHERE BID = '" + selectedBusiness.BID + "' AND CI_DAYOFWEEK = '" + DateTime.Now.DayOfWeek + "'";
+                                cmd2.ExecuteReader();
+                            }
+                        }
+
+                        PopulateSearchResults();
+                    }
+                }
+            }
+        }
+
+        private static Random random = new Random();
+        public static string RandomString(int length) {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private void addReviewClicked(object sender, RoutedEventArgs e) {
+            bool validID = false;
+            string possibleID;
+            using (var conn = new NpgsqlConnection(buildConnString())) {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand()) {
+                    cmd.Connection = conn;
+                    
+                    while (!validID) {
+                        possibleID = RandomString(30);
+                        var conn2 = new NpgsqlConnection(buildConnString());
+                        conn2.Open();
+                        var cmd2 = new NpgsqlCommand();
+                        cmd2.Connection = conn2;
+                        cmd2.CommandText = "SELECT * FROM REVIEW WHERE REVIEWID = '" + possibleID + "'";
+                        using (var reader = cmd2.ExecuteReader()) {
+                            if (!reader.HasRows) {
+                                validID = true;
+                            } 
+                        }
+                    }
+
+                    string reviewID = RandomString(30);
+                    cmd.CommandText = "INSERT INTO REVIEW(REVIEWID, UID, BID, STARS, REVIEWDATE, NOTES, USEFUL, FUNNY, COOL) VALUES('" + reviewID + "','" + currUser.uid + "','" + selectedBusiness.BID + "'," + selectedRatingDropBox.SelectedValue.ToString() + ",'" + DateTime.Now.ToString("yyyy-MM-dd") + "','" + reviewNotesBox.Text + "',0,0,0)";
+                    cmd.ExecuteReader();
+                    PopulateSearchResults();
+                }
+            }
+        }
+
+        //TY StackOverflow
+        public double getDistance(double lat1, double lon1, double lat2, double lon2) {
+            double rlat1 = Math.PI * lat1 / 180;
+            double rlat2 = Math.PI * lat2 / 180;
+            double theta = lon1 - lon2;
+            double rtheta = Math.PI * theta / 180;
+            double dist =
+                Math.Sin(rlat1) * Math.Sin(rlat2) + Math.Cos(rlat1) *
+                Math.Cos(rlat2) * Math.Cos(rtheta);
+            dist = Math.Acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+
+            return dist;
+        }
+
+        private void showReviewsClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected. Please Select One.");
+            } else {
+                Page3 p = new Page3(selectedBusiness);
+                this.NavigationService.Navigate(p);
+            }
+        }
     }
 }

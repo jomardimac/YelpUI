@@ -75,7 +75,11 @@
     <Compile Include="businessPage.xaml.cs">
       <DependentUpon>businessPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="busReview.cs" />
     <Compile Include="Friend.cs" />
+    <Compile Include="Page3.xaml.cs">
+      <DependentUpon>Page3.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Review.cs" />
     <Compile Include="SearchRes.cs" />
     <Compile Include="User.cs" />
@@ -98,6 +102,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Page3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="userPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
