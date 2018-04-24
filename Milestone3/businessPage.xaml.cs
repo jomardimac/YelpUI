@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Security.Policy;
+using System.ComponentModel;
 using Npgsql;
 
 namespace Milestone3 {
@@ -351,10 +352,10 @@ namespace Milestone3 {
 
         string CheckSorting() {
             var query = " ORDER BY bname ";
-            if (sortResDropBox.SelectedItem == null ) {
+            if (sortResDropBox.SelectedItem == null) {
                 return query;
             }
-            else if(sortResDropBox.SelectedItem.ToString() == "Business Name (default sort)") {
+            else if (sortResDropBox.SelectedItem.ToString() == "Business Name (default sort)") {
                 query = " ORDER BY bname ";
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Highest Ratings (stars)") {
@@ -369,8 +370,30 @@ namespace Milestone3 {
             else if (sortResDropBox.SelectedItem.ToString() == "Most Check-Ins") {
                 query = " ORDER BY numCheckins ";
             }
+
+            else if (sortResDropBox.SelectedItem.ToString() == "Nearest") {
+                //(searchResGrid.ItemsSource as DataGrid).Sorting
+                /* MyDataGrid.ItemsSource = DataContext.RowItems.OrderBy(p => p.Score).ToList();*/
+                //column #4:
+                
+                foreach (var items in searchResGrid.Columns) {
+                    items.SortDirection = null;
+                }
+
+                string propName = searchResGrid.Columns[4].Header.ToString();
+                searchResGrid.Items.SortDescriptions.Clear();
+                searchResGrid.Items.SortDescriptions.Add(new SortDescription(searchResGrid.Columns[4].SortMemberPath, ListSortDirection.Ascending));
+                foreach(var items in searchResGrid.Columns) {
+                    items.SortDirection = null;
+                }
+                searchResGrid.Columns[4].SortDirection = ListSortDirection.Ascending;
+                
+            }
             
             return query;
+        }
+        private void applySortDirection(ListSortDirection listSortDirection) {
+            
         }
         /***************************************************SEARCH RESULT METHODS***************************************************/
         //Populate the populate teh whole search.
@@ -534,6 +557,7 @@ namespace Milestone3 {
 
         private void Search_Businesses_Click(object sender, RoutedEventArgs e) {
             PopulateSearchResults();
+            searchResGrid.Items.Refresh();
         }
         
 
