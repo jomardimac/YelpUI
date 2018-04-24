@@ -37,26 +37,26 @@
         <ComboBox x:Name="fromBox" HorizontalAlignment="Left" Margin="421,22,0,0" VerticalAlignment="Top" Width="70"/>
         <Label Content="To:" HorizontalAlignment="Left" Margin="496,18,0,0" VerticalAlignment="Top" Width="30"/>
         <ComboBox x:Name="toBox" HorizontalAlignment="Left" Margin="526,22,0,0" VerticalAlignment="Top" Width="70"/>
-        <CheckBox Content="$" HorizontalAlignment="Left" Margin="689,21,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="$$" HorizontalAlignment="Left" Margin="689,51,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="$$$" HorizontalAlignment="Left" Margin="856,21,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="$$$$" HorizontalAlignment="Left" Margin="856,51,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Accepts Credit Cards" HorizontalAlignment="Left" Margin="689,117,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Takes Reservations" HorizontalAlignment="Left" Margin="689,137,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Wheelchair Accessible" HorizontalAlignment="Left" Margin="689,157,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Outdoor Seating" HorizontalAlignment="Left" Margin="689,177,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Good for Kids" HorizontalAlignment="Left" Margin="689,197,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Good For Groups" HorizontalAlignment="Left" Margin="689,217,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Delivery" HorizontalAlignment="Left" Margin="689,237,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Take Out" HorizontalAlignment="Left" Margin="689,257,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Free Wi-Fi" HorizontalAlignment="Left" Margin="689,277,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Bike Parking" HorizontalAlignment="Left" Margin="689,297,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Breakfast" HorizontalAlignment="Left" Margin="689,348,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Brunch" HorizontalAlignment="Left" Margin="689,368,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Lunch" HorizontalAlignment="Left" Margin="689,388,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Dinner" HorizontalAlignment="Left" Margin="856,348,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Dessert" HorizontalAlignment="Left" Margin="856,368,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Late Night" HorizontalAlignment="Left" Margin="856,388,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="price1" Content="$" HorizontalAlignment="Left" Margin="689,21,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="price2" Content="$$" HorizontalAlignment="Left" Margin="689,51,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="price3" Content="$$$" HorizontalAlignment="Left" Margin="856,21,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="price4" Content="$$$$" HorizontalAlignment="Left" Margin="856,51,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="AccCredCard" Content="Accepts Credit Cards" HorizontalAlignment="Left" Margin="689,117,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="TakesRes" Content="Takes Reservations" HorizontalAlignment="Left" Margin="689,137,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="WheelAcc" Content="Wheelchair Accessible" HorizontalAlignment="Left" Margin="689,157,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="OutdoorSeat" Content="Outdoor Seating" HorizontalAlignment="Left" Margin="689,177,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="GoodKid" Content="Good for Kids" HorizontalAlignment="Left" Margin="689,197,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="GoodGroups" Content="Good For Groups" HorizontalAlignment="Left" Margin="689,217,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="Deliv" Content="Delivery" HorizontalAlignment="Left" Margin="689,237,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="TakeOut" Content="Take Out" HorizontalAlignment="Left" Margin="689,257,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="FWifi" Content="Free Wi-Fi" HorizontalAlignment="Left" Margin="689,277,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="BikePark" Content="Bike Parking" HorizontalAlignment="Left" Margin="689,297,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="Breakfast" Content="Breakfast" HorizontalAlignment="Left" Margin="689,348,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="Brunch" Content="Brunch" HorizontalAlignment="Left" Margin="689,368,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="Lunch" Content="Lunch" HorizontalAlignment="Left" Margin="689,388,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="Dinner" Content="Dinner" HorizontalAlignment="Left" Margin="856,348,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="Dessert" Content="Dessert" HorizontalAlignment="Left" Margin="856,368,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="LateNight" Content="Late Night" HorizontalAlignment="Left" Margin="856,388,0,0" VerticalAlignment="Top"/>
         <Button Content="Show Checkins" HorizontalAlignment="Left" Margin="681,493,0,0" VerticalAlignment="Top" Width="250" Click="Add_Click" Height="25"/>
         <Button Content="Show Reviews" HorizontalAlignment="Left" Margin="681,523,0,0" VerticalAlignment="Top" Width="250" Click="Add_Click" Height="25"/>
         <Button Content="# of Businesses per Zipcode" HorizontalAlignment="Left" Margin="681,553,0,0" VerticalAlignment="Top" Width="250" Click="Add_Click" Height="25"/>

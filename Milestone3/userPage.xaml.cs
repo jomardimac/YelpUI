@@ -20,7 +20,7 @@ namespace Milestone3 {
     /// </summary>
     public partial class userPage : Page {
 
-        public float latitude, longitude;
+        User currUser;
 
         public userPage() {
             InitializeComponent();
@@ -67,7 +67,7 @@ namespace Milestone3 {
                 using (var cmd = new NpgsqlCommand()) {
                     cmd.Connection = conn;
                     if (possibleUIDS.SelectedValue != null) {
-                        cmd.CommandText = "SELECT dbuser.name, dbuser.avgstars, dbuser.fans, dbuser.yelping_since, dbuser.funny, dbuser.cool, dbuser.useful FROM DBUSER WHERE DBUSER.UID = '" + possibleUIDS.SelectedValue.ToString() + "'";
+                        cmd.CommandText = "SELECT dbuser.name, dbuser.avgstars, dbuser.fans, dbuser.yelping_since, dbuser.funny, dbuser.cool, dbuser.useful, dbuser.uid FROM DBUSER WHERE DBUSER.UID = '" + possibleUIDS.SelectedValue.ToString() + "'";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 usersNameBox.Text = reader.GetString(0);
@@ -77,6 +77,8 @@ namespace Milestone3 {
                                 userFunny.Text = reader.GetString(4).ToString();
                                 userCool.Text = reader.GetString(5).ToString();
                                 userUseful.Text = reader.GetString(6).ToString();
+
+                                currUser = new User(reader.GetString(0), reader.GetString(7), 0.0, 0.0);
                             }
                         }
                     }
@@ -184,6 +186,15 @@ namespace Milestone3 {
             }
         }
 
+        private void toBusiness_Click(object sender, RoutedEventArgs e) {
+            if (currUser != null) {
+                businessPage newBusiness = new businessPage(currUser);
+                this.NavigationService.Navigate(newBusiness);
+            } else {
+                MessageBox.Show("No User Selected.");
+            }
+        }
+
         //Add the columns needed in the friendsList datagrid view.
         void addFriendsListCols() {
             DataGridTextColumn nameCol = new DataGridTextColumn();
@@ -208,6 +219,18 @@ namespace Milestone3 {
             fidCol.Header = "FID";
             fidCol.Binding = new Binding("fid");
             friendsList.Columns.Add(fidCol);
+        }
+
+        private void setLocationClicked(object sender, RoutedEventArgs e) {
+            if (currUser == null) {
+                MessageBox.Show("No User Selected");
+            } else {
+                if (latBox.Text != null && longBox.Text != null) {
+                    currUser.lat = Convert.ToDouble(latBox.Text);
+                    currUser.longi = Convert.ToDouble(longBox.Text);
+                }
+
+            }
         }
     }
 }
