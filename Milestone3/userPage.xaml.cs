@@ -29,8 +29,9 @@ namespace Milestone3 {
         }
 
         private string buildConnString() {
-            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            //return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
             //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
+            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8282";        //Jomar Laptop Connection
         }
 
 
@@ -226,8 +227,12 @@ namespace Milestone3 {
                 MessageBox.Show("No User Selected");
             } else {
                 if (latBox.Text != null && longBox.Text != null) {
-                    currUser.lat = Convert.ToDouble(latBox.Text);
-                    currUser.longi = Convert.ToDouble(longBox.Text);
+                    try {
+                        currUser.lat = Convert.ToDouble(latBox.Text);
+                        currUser.longi = Convert.ToDouble(longBox.Text);
+                    } catch {
+
+                    }
                 }
 
             }

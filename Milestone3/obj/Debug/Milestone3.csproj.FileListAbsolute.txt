@@ -44,10 +44,13 @@ C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\bin\Debug\System.Windows.C
 C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.Layout.Toolkit.dll
 C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\bin\Debug\WPFToolkit.dll
 C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\bin\Debug\System.Threading.Tasks.Extensions.xml
-C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\Milestone3.csproj.CopyComplete
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Threading.Tasks.Extensions.dll
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.Input.Toolkit.dll
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.Layout.Toolkit.dll
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\WPFToolkit.dll
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Threading.Tasks.Extensions.xml
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\Milestone3.csprojResolveAssemblyReference.cache
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\Page3.g.cs
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\Page3.baml
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\Page3.g.cs
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\Page3.baml
