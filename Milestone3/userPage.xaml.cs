@@ -41,7 +41,7 @@ namespace Milestone3 {
                     conn.Open();
                     using (var cmd = new NpgsqlCommand()) {
                         cmd.Connection = conn;
-                        cmd.CommandText = "SELECT dbuser.uid FROM dbuser WHERE dbuser.name = '" + nameBox.Text + "' order by dbuser.uid";
+                        cmd.CommandText = "SELECT dbuser.uid FROM dbuser WHERE dbuser.name = '" + nameBox.Text + "'";
                         using (var reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 possibleUIDS.Items.Add(reader.GetString(0));

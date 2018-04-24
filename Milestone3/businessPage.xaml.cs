@@ -157,7 +157,7 @@ namespace Milestone3 {
                     //Normal location filtering:
                     if (stateBox.SelectedValue != null) {
                         String query =
-                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins, b.bid FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins, b.bid, b.latitude, b.longitude FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
 
                         int n = 0;
                         foreach (var items in CatList()) {
@@ -204,6 +204,10 @@ namespace Milestone3 {
                             int j = 0;
                             while (reader.Read()) {
                                 j++;
+                                double bLat = reader.GetDouble(9);
+                                double bLong = reader.GetDouble(10);
+                                double distance = getDistance(currUser.lat, currUser.longi, bLat, bLong);
+                                distance = Math.Round(distance, 2);
                                 searchResGrid.Items.Add(new SearchRes() {
                                     busName = reader.GetString(0),
                                     Address = reader.GetString(1),
@@ -213,7 +217,8 @@ namespace Milestone3 {
                                     NumRev = reader.GetInt32(5),
                                     AvgRev = reader.GetDouble(6),
                                     TotalCheckin = reader.GetInt32(7),
-                                    BID = reader.GetString(8)
+                                    BID = reader.GetString(8),
+                                    Distance = distance
                                 });
                             }
                         }
@@ -542,6 +547,31 @@ namespace Milestone3 {
                     cmd.ExecuteReader();
                     PopulateSearchResults();
                 }
+            }
+        }
+
+        //TY StackOverflow
+        public double getDistance(double lat1, double lon1, double lat2, double lon2) {
+            double rlat1 = Math.PI * lat1 / 180;
+            double rlat2 = Math.PI * lat2 / 180;
+            double theta = lon1 - lon2;
+            double rtheta = Math.PI * theta / 180;
+            double dist =
+                Math.Sin(rlat1) * Math.Sin(rlat2) + Math.Cos(rlat1) *
+                Math.Cos(rlat2) * Math.Cos(rtheta);
+            dist = Math.Acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+
+            return dist;
+        }
+
+        private void showReviewsClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected. Please Select One.");
+            } else {
+                Page3 p = new Page3(selectedBusiness);
+                this.NavigationService.Navigate(p);
             }
         }
     }

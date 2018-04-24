@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Milestone3 {
-    class SearchRes {
+    public class SearchRes {
         public string busName { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
