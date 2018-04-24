@@ -34,9 +34,9 @@
         <Label Content="Day of Week:" HorizontalAlignment="Left" Margin="167,18,0,0" VerticalAlignment="Top" Width="80"/>
         <ComboBox x:Name="day_weekBox" HorizontalAlignment="Left" Margin="252,22,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="From:" HorizontalAlignment="Left" Margin="377,18,0,0" VerticalAlignment="Top" Width="39"/>
-        <ComboBox x:Name="fromBox" HorizontalAlignment="Left" Margin="421,22,0,0" VerticalAlignment="Top" Width="70"/>
+        <ComboBox x:Name="FromBox" HorizontalAlignment="Left" Margin="421,22,0,0" VerticalAlignment="Top" Width="70"/>
         <Label Content="To:" HorizontalAlignment="Left" Margin="496,18,0,0" VerticalAlignment="Top" Width="30"/>
-        <ComboBox x:Name="toBox" HorizontalAlignment="Left" Margin="526,22,0,0" VerticalAlignment="Top" Width="70"/>
+        <ComboBox x:Name="ToBox" HorizontalAlignment="Left" Margin="526,22,0,0" VerticalAlignment="Top" Width="70"/>
         <CheckBox x:Name="price1" Content="$" HorizontalAlignment="Left" Margin="689,21,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="price2" Content="$$" HorizontalAlignment="Left" Margin="689,51,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="price3" Content="$$$" HorizontalAlignment="Left" Margin="856,21,0,0" VerticalAlignment="Top"/>

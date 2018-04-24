@@ -30,6 +30,7 @@ namespace Milestone3 {
             PopulateCat();
             SearchResultsCols();
 
+            PopulateTimeFilters();
             currUser = newUser;
             FillSorting();
         }
@@ -132,6 +133,34 @@ namespace Milestone3 {
         private void Remove_Click(object sender, RoutedEventArgs e) {
             if (listOfBusCat.SelectedValue != null) {
                 listOfBusCat.Items.Remove(listOfBusCat.SelectedValue);
+            }
+        }
+        /***************************************************Open Time Filters:***************************************************/
+
+        void PopulateTimeFilters() {
+            //day of week:
+            day_weekBox.Items.Add("Sunday");
+            day_weekBox.Items.Add("Monday");
+            day_weekBox.Items.Add("Tuesday");
+            day_weekBox.Items.Add("Wednesday");
+            day_weekBox.Items.Add("Thursday");
+            day_weekBox.Items.Add("Friday");
+            day_weekBox.Items.Add("Saturday");
+
+            //open close time: 
+            for (int i = 0; i <= 23; i++) {
+                if (i < 9) {
+                    string openquery = "0#time#:00";
+                    openquery = openquery.Replace("#time#", i.ToString());
+                    FromBox.Items.Add(openquery);
+                    ToBox.Items.Add(openquery);
+                }
+                else {
+                    string openquery = "#time#:00";
+                    openquery = openquery.Replace("#time#", i.ToString());
+                    FromBox.Items.Add(openquery);
+                    ToBox.Items.Add(openquery);
+                }
             }
         }
 
@@ -346,7 +375,7 @@ namespace Milestone3 {
                     //Normal location filtering:
                     if (stateBox.SelectedValue != null) {
                         String query =
-                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b JOIN businesscat bc on b.bid = bc.bid AND b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#'";
+                            @"SELECT distinct b.bname, b.address, b.city, b.state, b.stars, b.reviewcount, b.reviewRating, b.numcheckins FROM business as b ";
 
                         int n = 0;
                         foreach (var items in CatList()) {
@@ -356,12 +385,6 @@ namespace Milestone3 {
                             query = query.Replace("#items#", items);
                             n++;
                         }
-
-                        
-                        query = query.Replace("#state#", stateBox.SelectedValue.ToString());
-                        query = query.Replace("#city#", cityBox.SelectedValue.ToString());
-                        query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
-                        
 
 
                         //Filtering by price:
@@ -386,8 +409,30 @@ namespace Milestone3 {
                         query += DessertFilter();
                         query += LatenightFilter();
 
+                        
+
+                        //open close time:
+                        if(day_weekBox.SelectedValue == null && FromBox.SelectedValue == null && ToBox.SelectedValue == null) {
+
+                        }
+                        else if(day_weekBox.SelectedValue != null) {
+                            if (ToBox.SelectedValue != null || FromBox.SelectedValue != null) {
+                                query += @" JOIN (SELECT distinct b.bid FROM business b, bushours as bh WHERE b.bid = bh.bid AND bh.h_dayofweek = '#personalday#' AND (BH.open <= '#from#' AND BH.close >= '#to#' OR (BH.open = '00:00' AND BH.close = '00:00')))bidness on bidness.bid = b.bid ";
+                                query = query.Replace("#personalday#", day_weekBox.SelectedValue.ToString());
+                                query = query.Replace("#from#",FromBox.SelectedValue.ToString());
+                                query = query.Replace("#to#",ToBox.SelectedValue.ToString());
+                            }
+                        }
+                        else {
+                            
+                        }
+
                         //sorting:
+                        query += @" WHERE b.state = '#state#' AND b.city = '#city#' AND b.postalcode = '#zip#' ";
                         query += CheckSorting();
+                        query = query.Replace("#state#", stateBox.SelectedValue.ToString());
+                        query = query.Replace("#city#", cityBox.SelectedValue.ToString());
+                        query = query.Replace("#zip#", zipBox.SelectedValue.ToString());
                         cmd.CommandText = query;
                         using (var reader = cmd.ExecuteReader()) {
                             int j = 0;
