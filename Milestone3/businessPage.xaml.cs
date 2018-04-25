@@ -47,9 +47,9 @@ namespace Milestone3 {
         }
 
         private string buildConnString() {
-            return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
+            //return "Host=localhost; Username=postgres; Password=Jaysio102609!; Database=Milestone3";                    //Devon Connection 
             //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8181";        //Jomar Connection
-            //return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8282";        //Jomar Laptop Connection
+            return "Host=localhost; Username=postgres; Password=db2018; Database=yelpdb; port=8282";        //Jomar Laptop Connection
         }
 
         //Populate states:
@@ -160,7 +160,7 @@ namespace Milestone3 {
 
             //open close time: 
             for (int i = 0; i <= 23; i++) {
-                if (i < 9) {
+                if (i <= 9) {
                     string openquery = "0#time#:00";
                     openquery = openquery.Replace("#time#", i.ToString());
                     FromBox.Items.Add(openquery);
@@ -229,7 +229,7 @@ namespace Milestone3 {
         string ReservationFilter() {
             string query = "";
             if (TakesRes.IsChecked.GetValueOrDefault()) {
-                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'BusinessAcceptsCreditCards' AND bval = 'True') res ON res.bid = b.bid";
+                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'RestaurantsReservations' AND bval = 'True') res ON res.bid = b.bid";
             }
             return query;
         }
@@ -351,24 +351,29 @@ namespace Milestone3 {
         }
 
         string CheckSorting() {
-            var query = " ORDER BY bname ";
+            var query = " ORDER BY bname DESC";
             if (sortResDropBox.SelectedItem == null) {
                 return query;
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Business Name (default sort)") {
-                query = " ORDER BY bname ";
+                query = " ORDER BY bname DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Highest Ratings (stars)") {
-                query = " ORDER BY stars ";
+                query = " ORDER BY stars DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Most Reviewed") {
-                query = " ORDER BY reviewCount ";
+                query = " ORDER BY reviewCount DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Best Review Rating (highest avg review rating)") {
-                query = " ORDER BY reviewRating ";
+                query = " ORDER BY reviewRating DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Most Check-Ins") {
-                query = " ORDER BY numCheckins ";
+                query = " ORDER BY numCheckins DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
 
             else if (sortResDropBox.SelectedItem.ToString() == "Nearest") {
