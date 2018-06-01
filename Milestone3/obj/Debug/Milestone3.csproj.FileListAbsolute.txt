@@ -54,3 +54,15 @@ D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\Page3.g.cs
 D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\Page3.baml
 C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\Page3.g.cs
 C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\Page3.baml
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\chart1.g.cs
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\chart2.g.cs
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.xml
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\chart1.baml
+D:\School\Spring 2018\Databases\Milestone3\Milestone3\obj\Debug\chart2.baml
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.dll
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\bin\Debug\System.Windows.Controls.DataVisualization.Toolkit.xml
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\chart1.g.cs
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\chart2.g.cs
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\chart1.baml
+C:\Users\Jomar\Documents\GitHub\Milestone3\Milestone3\obj\Debug\chart2.baml

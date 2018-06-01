@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Security.Policy;
+using System.ComponentModel;
 using Npgsql;
 
 namespace Milestone3 {
@@ -159,7 +160,7 @@ namespace Milestone3 {
 
             //open close time: 
             for (int i = 0; i <= 23; i++) {
-                if (i < 9) {
+                if (i <= 9) {
                     string openquery = "0#time#:00";
                     openquery = openquery.Replace("#time#", i.ToString());
                     FromBox.Items.Add(openquery);
@@ -228,7 +229,7 @@ namespace Milestone3 {
         string ReservationFilter() {
             string query = "";
             if (TakesRes.IsChecked.GetValueOrDefault()) {
-                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'BusinessAcceptsCreditCards' AND bval = 'True') res ON res.bid = b.bid";
+                query += @" JOIN ( SELECT b.bid FROM BUSINESSATT AS BA INNER JOIN BUSINESS AS B ON B.BID = BA.BID WHERE ATTNAME = 'RestaurantsReservations' AND bval = 'True') res ON res.bid = b.bid";
             }
             return query;
         }
@@ -350,27 +351,54 @@ namespace Milestone3 {
         }
 
         string CheckSorting() {
-            var query = " ORDER BY bname ";
-            if (sortResDropBox.SelectedItem == null ) {
+            var query = " ORDER BY bname DESC";
+            if (sortResDropBox.SelectedItem == null) {
                 return query;
             }
-            else if(sortResDropBox.SelectedItem.ToString() == "Business Name (default sort)") {
-                query = " ORDER BY bname ";
+            else if (sortResDropBox.SelectedItem.ToString() == "Business Name (default sort)") {
+                query = " ORDER BY bname DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Highest Ratings (stars)") {
-                query = " ORDER BY stars ";
+                query = " ORDER BY stars DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Most Reviewed") {
-                query = " ORDER BY reviewCount ";
+                query = " ORDER BY reviewCount DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Best Review Rating (highest avg review rating)") {
-                query = " ORDER BY reviewRating ";
+                query = " ORDER BY reviewRating DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
             }
             else if (sortResDropBox.SelectedItem.ToString() == "Most Check-Ins") {
-                query = " ORDER BY numCheckins ";
+                query = " ORDER BY numCheckins DESC";
+                searchResGrid.Items.SortDescriptions.Clear();
+            }
+
+            else if (sortResDropBox.SelectedItem.ToString() == "Nearest") {
+                //(searchResGrid.ItemsSource as DataGrid).Sorting
+                /* MyDataGrid.ItemsSource = DataContext.RowItems.OrderBy(p => p.Score).ToList();*/
+                //column #4:
+                
+                foreach (var items in searchResGrid.Columns) {
+                    items.SortDirection = null;
+                }
+
+                string propName = searchResGrid.Columns[4].Header.ToString();
+                searchResGrid.Items.SortDescriptions.Clear();
+                searchResGrid.Items.SortDescriptions.Add(new SortDescription(searchResGrid.Columns[4].SortMemberPath, ListSortDirection.Ascending));
+                foreach(var items in searchResGrid.Columns) {
+                    items.SortDirection = null;
+                }
+                searchResGrid.Columns[4].SortDirection = ListSortDirection.Ascending;
+                
             }
             
             return query;
+        }
+        private void applySortDirection(ListSortDirection listSortDirection) {
+            
         }
         /***************************************************SEARCH RESULT METHODS***************************************************/
         //Populate the populate teh whole search.
@@ -534,6 +562,7 @@ namespace Milestone3 {
 
         private void Search_Businesses_Click(object sender, RoutedEventArgs e) {
             PopulateSearchResults();
+            searchResGrid.Items.Refresh();
         }
         
 
@@ -649,6 +678,26 @@ namespace Milestone3 {
                 MessageBox.Show("No Business Selected. Please Select One.");
             } else {
                 Page3 p = new Page3(selectedBusiness);
+                this.NavigationService.Navigate(p);
+            }
+        }
+
+        private void numBusClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected. Please Select One.");
+            }
+            else {
+                chart2 p = new chart2(selectedBusiness);
+                this.NavigationService.Navigate(p);
+            }
+        }
+
+        private void numCheckinsClicked(object sender, RoutedEventArgs e) {
+            if (selectedBusiness == null) {
+                MessageBox.Show("No Business Selected. Please Select One.");
+            }
+            else {
+                chart1 p = new chart1(selectedBusiness);
                 this.NavigationService.Navigate(p);
             }
         }
